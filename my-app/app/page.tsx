@@ -5,6 +5,7 @@ import Calendar from '@/components/Calendar';
 import EventDetailModal from '@/components/EventDetailModal';
 import TempleSearch from '@/components/TempleSearch';
 import FeaturedEvents from '@/components/FeaturedEvents';
+import TodaysEvents from '@/components/TodaysEvents';
 import { HinduEvent } from '@/types/event';
 import { Temple } from '@/types/temple';
 
@@ -36,13 +37,22 @@ export default function Home() {
       <header className="backdrop-blur-md border-b border-zinc-200 relative z-30 shadow-sm flex items-center" style={{ backgroundColor: '#E0CBB7' }}>
         <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
           <div className="flex items-center justify-between mb-1.5">
-            <div className="text-left">
-              <h1 className="text-lg font-bold text-zinc-900">
-                Bhakti
-              </h1>
-              <p className="text-zinc-600 text-xs">
-                Discover festivals, holidays, and spiritual events
-              </p>
+            <div className="text-left flex items-center gap-2">
+              <img 
+                src="/bhakti-logo.svg" 
+                alt="Bhakti Logo" 
+                width={32}
+                height={32}
+                className="object-contain"
+              />
+              <div>
+                <h1 className="text-lg font-bold text-zinc-900">
+                  Bhakti
+                </h1>
+                <p className="text-zinc-600 text-xs">
+                  Discover festivals, holidays, and spiritual events
+                </p>
+              </div>
             </div>
           </div>
           
@@ -64,8 +74,12 @@ export default function Home() {
             <Calendar onDateClick={handleDateClick} />
           </div>
 
-          {/* Featured Events - Right Side (1/3 width on large screens) */}
-          <div className="lg:col-span-1">
+          {/* Right Column - Today's Events and Featured Events (1/3 width on large screens) */}
+          <div className="lg:col-span-1 flex flex-col gap-3">
+            {/* Today's Events Box */}
+            <TodaysEvents />
+            
+            {/* Featured Events */}
             <FeaturedEvents selectedTemple={selectedTemple} />
           </div>
         </div>
