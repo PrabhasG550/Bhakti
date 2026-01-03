@@ -38,7 +38,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
+    <div className="rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto" style={{ backgroundColor: '#E0CBB7' }}>
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-6">
         <button
@@ -51,7 +51,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
           </svg>
         </button>
         
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h2 className="text-2xl font-bold text-black">
           {format(currentDate, 'MMMM yyyy')}
         </h2>
         
@@ -98,23 +98,20 @@ export default function Calendar({ onDateClick }: CalendarProps) {
               className={`
                 aspect-square p-2 rounded-lg border-2 transition-all
                 hover:scale-105 hover:shadow-md
+                bg-white
                 ${isToday 
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:border-blue-400 font-bold' 
-                  : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'
-                }
-                ${hasEvents 
-                  ? 'bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20' 
-                  : 'bg-white dark:bg-zinc-800'
+                  ? 'border-blue-500 font-bold' 
+                  : 'border-zinc-200 hover:border-zinc-300'
                 }
               `}
             >
               <div className="flex flex-col h-full">
                 <span
                   className={`
-                    text-sm mb-1
+                    text-sm mb-1 text-black
                     ${isToday 
-                      ? 'text-blue-600 dark:text-blue-400' 
-                      : 'text-zinc-700 dark:text-zinc-300'
+                      ? 'font-bold' 
+                      : ''
                     }
                   `}
                 >

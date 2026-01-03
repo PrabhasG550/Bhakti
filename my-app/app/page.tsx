@@ -33,14 +33,14 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FAE4CF' }}>
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between mb-6">
+      <header className="backdrop-blur-md border-b border-zinc-200 absolute top-0 left-0 right-0 z-30 shadow-sm" style={{ backgroundColor: '#E0CBB7' }}>
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900">
-                🕉️ Hindu Calendar
+              <h1 className="text-2xl font-bold text-zinc-900">
+                Bhakti
               </h1>
-              <p className="text-zinc-600 mt-1">
+              <p className="text-zinc-600 text-sm mt-0.5">
                 Discover festivals, holidays, and spiritual events
               </p>
             </div>
@@ -57,7 +57,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ paddingTop: '140px' }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendar - Left Side (2/3 width on large screens) */}
           <div className="lg:col-span-2">
