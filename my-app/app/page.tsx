@@ -31,16 +31,16 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FAE4CF' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#FAE4CF' }}>
       {/* Header */}
-      <header className="backdrop-blur-md border-b border-zinc-200 absolute top-0 left-0 right-0 z-30 shadow-sm" style={{ backgroundColor: '#E0CBB7' }}>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <h1 className="text-2xl font-bold text-zinc-900">
+      <header className="backdrop-blur-md border-b border-zinc-200 relative z-30 shadow-sm flex items-center" style={{ backgroundColor: '#E0CBB7' }}>
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
+          <div className="flex items-center justify-between mb-1.5">
+            <div className="text-left">
+              <h1 className="text-lg font-bold text-zinc-900">
                 Bhakti
               </h1>
-              <p className="text-zinc-600 text-sm mt-0.5">
+              <p className="text-zinc-600 text-xs">
                 Discover festivals, holidays, and spiritual events
               </p>
             </div>
@@ -57,8 +57,8 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ paddingTop: '140px' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-1.5">
+        <div className="w-full max-w-[1600px] grid grid-cols-1 lg:grid-cols-3 gap-3">
           {/* Calendar - Left Side (2/3 width on large screens) */}
           <div className="lg:col-span-2">
             <Calendar onDateClick={handleDateClick} />

@@ -38,9 +38,9 @@ export default function Calendar({ onDateClick }: CalendarProps) {
   };
 
   return (
-    <div className="rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto" style={{ backgroundColor: '#E0CBB7' }}>
+    <div className="rounded-lg shadow-lg p-3 w-full mx-auto" style={{ backgroundColor: '#E0CBB7' }}>
       {/* Calendar Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-2">
         <button
           onClick={handlePrevMonth}
           className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
@@ -51,7 +51,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
           </svg>
         </button>
         
-        <h2 className="text-2xl font-bold text-black">
+        <h2 className="text-lg font-bold text-black">
           {format(currentDate, 'MMMM yyyy')}
         </h2>
         
@@ -67,7 +67,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
       </div>
 
       {/* Week Day Headers */}
-      <div className="grid grid-cols-7 gap-2 mb-2">
+      <div className="grid grid-cols-7 gap-1.5 mb-1.5">
         {weekDays.map((day) => (
           <div
             key={day}
@@ -79,7 +79,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1">
         {/* Empty cells for days before month starts */}
         {emptyDays.map((_, index) => (
           <div key={`empty-${index}`} className="aspect-square" />
@@ -96,7 +96,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
               key={day.toISOString()}
               onClick={() => handleDateClick(day)}
               className={`
-                aspect-square p-2 rounded-lg border-2 transition-all
+                aspect-square p-1 rounded-lg border-2 transition-all
                 hover:scale-105 hover:shadow-md
                 bg-white
                 ${isToday 
@@ -139,8 +139,8 @@ export default function Calendar({ onDateClick }: CalendarProps) {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-        <div className="flex items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400">
+      <div className="mt-2 pt-1.5 border-t border-zinc-200 dark:border-zinc-700">
+        <div className="flex items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/30"></div>
             <span>Today</span>

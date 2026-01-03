@@ -96,7 +96,7 @@ export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleS
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => searchQuery && setShowResults(true)}
             placeholder="Search for a temple or enter your city..."
-            className="w-full pl-12 pr-4 py-3 border-2 border-zinc-300 rounded-lg bg-white text-black placeholder-zinc-400 focus:outline-none focus:border-orange-500 transition-colors"
+            className="w-full pl-10 pr-3 py-1.5 border-2 border-zinc-300 rounded-lg bg-white text-black placeholder-zinc-400 focus:outline-none focus:border-orange-500 transition-colors text-sm"
           />
           {searchQuery && (
             <button
@@ -117,7 +117,7 @@ export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleS
         <button
           onClick={handleLocationClick}
           disabled={isLoading}
-          className="px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap"
+          className="px-2.5 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap text-xs"
         >
           <svg
             className="h-5 w-5"

@@ -46,9 +46,9 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 h-full">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-black mb-2">
+    <div className="bg-white rounded-lg shadow-lg p-3 h-full">
+      <div className="mb-2">
+        <h2 className="text-lg font-bold text-black mb-1">
           Featured Events
         </h2>
         {selectedTemple ? (
@@ -69,7 +69,7 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
           </p>
         </div>
       ) : (
-        <div className="space-y-4 max-h-[calc(100vh-300px)] overflow-y-auto">
+        <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto">
           {featuredEvents.map((event) => {
             const eventDate = new Date(event.date);
             const isPast = eventDate < new Date();
@@ -85,7 +85,7 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
               >
                 {/* Event Image */}
                 {event.imageUrl && (
-                  <div className="w-full h-32 overflow-hidden">
+                  <div className="w-full h-24 overflow-hidden">
                     <img
                       src={event.imageUrl}
                       alt={event.name}
@@ -96,7 +96,7 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
                     />
                   </div>
                 )}
-                <div className="p-4">
+                <div className="p-3">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
