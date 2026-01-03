@@ -3,12 +3,16 @@
 import { useState } from 'react';
 import Calendar from '@/components/Calendar';
 import EventDetailModal from '@/components/EventDetailModal';
+import TempleSearch from '@/components/TempleSearch';
+import FeaturedEvents from '@/components/FeaturedEvents';
 import { HinduEvent } from '@/types/event';
+import { Temple } from '@/types/temple';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<HinduEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTemple, setSelectedTemple] = useState<Temple | null>(null);
 
   const handleDateClick = (date: Date, events: HinduEvent[]) => {
     setSelectedDate(date);
@@ -22,27 +26,49 @@ export default function Home() {
     setSelectedEvents([]);
   };
 
+  const handleTempleSelect = (temple: Temple | null) => {
+    setSelectedTemple(temple);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900">
+    <div className="min-h-screen" style={{ backgroundColor: '#FAE4CF' }}>
       {/* Header */}
-      <header className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+      <header className="bg-white/80 backdrop-blur-md border-b border-zinc-200 sticky top-0 z-30 shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+              <h1 className="text-3xl font-bold text-zinc-900">
                 🕉️ Hindu Calendar
               </h1>
-              <p className="text-zinc-600 dark:text-zinc-400 mt-1">
+              <p className="text-zinc-600 mt-1">
                 Discover festivals, holidays, and spiritual events
               </p>
             </div>
+          </div>
+          
+          {/* Temple Search Bar */}
+          <div className="w-full">
+            <TempleSearch 
+              onTempleSelect={handleTempleSelect} 
+              selectedTemple={selectedTemple}
+            />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Calendar onDateClick={handleDateClick} />
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Calendar - Left Side (2/3 width on large screens) */}
+          <div className="lg:col-span-2">
+            <Calendar onDateClick={handleDateClick} />
+          </div>
+
+          {/* Featured Events - Right Side (1/3 width on large screens) */}
+          <div className="lg:col-span-1">
+            <FeaturedEvents selectedTemple={selectedTemple} />
+          </div>
+        </div>
       </main>
 
       {/* Event Detail Modal */}
