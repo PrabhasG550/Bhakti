@@ -96,7 +96,7 @@ export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleS
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => searchQuery && setShowResults(true)}
             placeholder="Search for a temple or enter your city..."
-            className="w-full pl-10 pr-3 py-1.5 border-2 border-zinc-300 rounded-lg bg-white text-black placeholder-zinc-400 focus:outline-none focus:border-orange-500 transition-colors text-sm"
+            className="w-full pl-10 pr-3 py-1.5 border-2 border-zinc-300 rounded-lg bg-white text-black placeholder-zinc-400 focus:outline-none focus:border-orange-500 transition-colors text-sm min-w-[300px]"
           />
           {searchQuery && (
             <button

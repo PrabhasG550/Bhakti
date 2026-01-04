@@ -52,3 +52,4 @@ export const getHinduDayName = (date: Date): string => {
   return dayNames[date.getDay()];
 };
 
+
