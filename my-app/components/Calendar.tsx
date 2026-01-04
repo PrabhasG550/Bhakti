@@ -56,30 +56,30 @@ export default function Calendar({ onDateClick }: CalendarProps) {
   return (
     <div className="rounded-lg shadow-lg p-2 w-full mx-auto" style={{ backgroundColor: '#E0CBB7' }}>
       {/* Calendar Header */}
-      <div className="flex items-center justify-between mb-1.5">
+      <div className="flex items-center gap-2 mb-1.5">
         <button
           onClick={handlePrevMonth}
           className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
           aria-label="Previous month"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        
-        <h2 className="text-base font-bold text-black">
-          {format(currentDate, 'MMMM yyyy')}
-        </h2>
         
         <button
           onClick={handleNextMonth}
           className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
           aria-label="Next month"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
+        
+        <h2 className="text-2xl font-bold text-black">
+          {format(currentDate, 'MMMM yyyy')}
+        </h2>
       </div>
 
       {/* Week Day Headers */}

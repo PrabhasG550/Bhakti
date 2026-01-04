@@ -86,35 +86,58 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#FAE4CF' }}>
       {/* Header */}
-      <header className="backdrop-blur-md border-b border-zinc-200 relative z-30 shadow-sm flex items-center" style={{ backgroundColor: '#E0CBB7' }}>
-        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5">
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="text-left flex items-center gap-2">
+      <header className="backdrop-blur-md border-b border-zinc-200 relative z-30 shadow-sm" style={{ backgroundColor: '#E0CBB7' }}>
+        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <div className="flex items-center">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center gap-2">
               <img 
                 src="/bhakti-logo.svg" 
                 alt="Bhakti Logo" 
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 className="object-contain"
               />
-              <div>
-                <h1 className="text-lg font-bold text-zinc-900">
-                  Bhakti
-                </h1>
-                <p className="text-zinc-600 text-xs">
-                  Discover festivals, holidays, and spiritual events
-                </p>
-              </div>
+              <h1 className="text-xl font-bold text-zinc-900">
+                Bhakti
+              </h1>
             </div>
-          </div>
-          
-          {/* Temple Search Bar */}
-          <div className="w-full">
-            <TempleSearch 
-              onTempleSelect={handleTempleSelect} 
-              selectedTemple={selectedTemple}
-            />
             
+            {/* Left Spacer */}
+            <div className="flex-1"></div>
+            
+            {/* Search Bar - Centered */}
+            <div className="flex-shrink-0 w-[450px]">
+              <TempleSearch 
+                onTempleSelect={handleTempleSelect} 
+                selectedTemple={selectedTemple}
+              />
+            </div>
+            
+            {/* Right Spacer */}
+            <div className="flex-1"></div>
+            
+            {/* Profile Icon */}
+            <div className="flex-shrink-0">
+              <button
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white border-2 border-zinc-300 hover:border-zinc-400 transition-colors"
+                aria-label="Profile"
+              >
+                <svg
+                  className="w-5 h-5 text-zinc-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </header>
