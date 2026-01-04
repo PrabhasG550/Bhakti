@@ -4,16 +4,20 @@ import { useState } from 'react';
 import Calendar from '@/components/Calendar';
 import EventDetailModal from '@/components/EventDetailModal';
 import TempleSearch from '@/components/TempleSearch';
-import FeaturedEvents from '@/components/FeaturedEvents';
+import EventsTabs from '@/components/EventsTabs';
 import TodaysEvents from '@/components/TodaysEvents';
+import TempleCard from '@/components/TempleCard';
 import { HinduEvent } from '@/types/event';
 import { Temple } from '@/types/temple';
+import { temples } from '@/data/temples';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<HinduEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTemple, setSelectedTemple] = useState<Temple | null>(null);
+  const [savedEventIds, setSavedEventIds] = useState<string[]>([]);
+  const [subscribedTempleIds, setSubscribedTempleIds] = useState<string[]>([]);
 
   const handleDateClick = (date: Date, events: HinduEvent[]) => {
     setSelectedDate(date);
@@ -29,6 +33,22 @@ export default function Home() {
 
   const handleTempleSelect = (temple: Temple | null) => {
     setSelectedTemple(temple);
+  };
+
+  const handleToggleSave = (eventId: string) => {
+    setSavedEventIds((prev) =>
+      prev.includes(eventId)
+        ? prev.filter((id) => id !== eventId)
+        : [...prev, eventId]
+    );
+  };
+
+  const handleToggleSubscribe = (templeId: string) => {
+    setSubscribedTempleIds((prev) =>
+      prev.includes(templeId)
+        ? prev.filter((id) => id !== templeId)
+        : [...prev, templeId]
+    );
   };
 
   return (
@@ -62,6 +82,15 @@ export default function Home() {
               onTempleSelect={handleTempleSelect} 
               selectedTemple={selectedTemple}
             />
+            
+            {/* Temple Card - Shows when a temple is selected */}
+            {selectedTemple && (
+              <TempleCard 
+                temple={selectedTemple}
+                isSubscribed={subscribedTempleIds.includes(selectedTemple.id)}
+                onToggleSubscribe={handleToggleSubscribe}
+              />
+            )}
           </div>
         </div>
       </header>
@@ -79,8 +108,15 @@ export default function Home() {
             {/* Today's Events Box */}
             <TodaysEvents />
             
-            {/* Featured Events */}
-            <FeaturedEvents selectedTemple={selectedTemple} />
+            {/* Events Tabs */}
+            <EventsTabs 
+              selectedTemple={selectedTemple}
+              savedEventIds={savedEventIds}
+              onToggleSave={handleToggleSave}
+              subscribedTempleIds={subscribedTempleIds}
+              onToggleSubscribe={handleToggleSubscribe}
+              allTemples={temples}
+            />
           </div>
         </div>
       </main>
