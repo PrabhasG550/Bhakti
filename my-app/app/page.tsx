@@ -6,7 +6,7 @@ import EventDetailModal from '@/components/EventDetailModal';
 import TempleSearch from '@/components/TempleSearch';
 import EventsTabs from '@/components/EventsTabs';
 import TodaysEvents from '@/components/TodaysEvents';
-import TempleCard from '@/components/TempleCard';
+import TempleDetailModal from '@/components/TempleDetailModal';
 import { HinduEvent } from '@/types/event';
 import { Temple } from '@/types/temple';
 import { temples } from '@/data/temples';
@@ -16,8 +16,10 @@ export default function Home() {
   const [selectedEvents, setSelectedEvents] = useState<HinduEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTemple, setSelectedTemple] = useState<Temple | null>(null);
+  const [isTempleModalOpen, setIsTempleModalOpen] = useState(false);
   const [savedEventIds, setSavedEventIds] = useState<string[]>([]);
   const [subscribedTempleIds, setSubscribedTempleIds] = useState<string[]>([]);
+  const [cameFromTempleModal, setCameFromTempleModal] = useState(false);
 
   const handleDateClick = (date: Date, events: HinduEvent[]) => {
     setSelectedDate(date);
@@ -29,10 +31,18 @@ export default function Home() {
     setIsModalOpen(false);
     setSelectedDate(null);
     setSelectedEvents([]);
+    setCameFromTempleModal(false);
   };
 
   const handleTempleSelect = (temple: Temple | null) => {
     setSelectedTemple(temple);
+    if (temple) {
+      setIsTempleModalOpen(true);
+    }
+  };
+
+  const handleCloseTempleModal = () => {
+    setIsTempleModalOpen(false);
   };
 
   const handleToggleSave = (eventId: string) => {
@@ -49,6 +59,28 @@ export default function Home() {
         ? prev.filter((id) => id !== templeId)
         : [...prev, templeId]
     );
+  };
+
+  const handleEventClick = (event: HinduEvent) => {
+    // Close temple modal before opening event modal
+    if (isTempleModalOpen) {
+      setCameFromTempleModal(true);
+      setIsTempleModalOpen(false);
+    }
+    setSelectedDate(new Date(event.date));
+    setSelectedEvents([event]);
+    setIsModalOpen(true);
+  };
+
+  const handleBackToTemple = () => {
+    // Close event modal and reopen temple modal
+    setIsModalOpen(false);
+    setSelectedDate(null);
+    setSelectedEvents([]);
+    if (selectedTemple) {
+      setIsTempleModalOpen(true);
+      setCameFromTempleModal(false);
+    }
   };
 
   return (
@@ -83,14 +115,6 @@ export default function Home() {
               selectedTemple={selectedTemple}
             />
             
-            {/* Temple Card - Shows when a temple is selected */}
-            {selectedTemple && (
-              <TempleCard 
-                temple={selectedTemple}
-                isSubscribed={subscribedTempleIds.includes(selectedTemple.id)}
-                onToggleSubscribe={handleToggleSubscribe}
-              />
-            )}
           </div>
         </div>
       </header>
@@ -127,6 +151,22 @@ export default function Home() {
         selectedDate={selectedDate}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        savedEventIds={savedEventIds}
+        onToggleSave={handleToggleSave}
+        onBack={cameFromTempleModal ? handleBackToTemple : undefined}
+        showBackButton={cameFromTempleModal}
+      />
+
+      {/* Temple Detail Modal */}
+      <TempleDetailModal
+        temple={selectedTemple}
+        isOpen={isTempleModalOpen}
+        onClose={handleCloseTempleModal}
+        isSubscribed={selectedTemple ? subscribedTempleIds.includes(selectedTemple.id) : false}
+        onToggleSubscribe={handleToggleSubscribe}
+        savedEventIds={savedEventIds}
+        onToggleSave={handleToggleSave}
+        onEventClick={handleEventClick}
       />
     </div>
   );
