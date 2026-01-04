@@ -174,35 +174,6 @@ export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleS
           No temples found. Try a different search term.
         </div>
       )}
-
-      {/* Selected Temple Display */}
-      {selectedTemple && !showResults && (
-        <div className="mt-3 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="font-semibold text-zinc-900 dark:text-zinc-100">
-                {selectedTemple.name}
-              </div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-                {selectedTemple.location}, {selectedTemple.city}, {selectedTemple.state}
-              </div>
-            </div>
-            <button
-              onClick={handleClear}
-              className="ml-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
