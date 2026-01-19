@@ -13,6 +13,8 @@ interface EventsTabsProps {
   subscribedTempleIds: string[];
   onToggleSubscribe: (templeId: string) => void;
   allTemples: Temple[];
+  onEventClick?: (event: HinduEvent) => void;
+  onTempleClick?: (temple: Temple) => void;
 }
 
 export default function EventsTabs({ 
@@ -21,7 +23,9 @@ export default function EventsTabs({
   onToggleSave,
   subscribedTempleIds,
   onToggleSubscribe,
-  allTemples
+  allTemples,
+  onEventClick,
+  onTempleClick
 }: EventsTabsProps) {
   const [activeTab, setActiveTab] = useState<'saved' | 'upcoming' | 'subscribed'>('upcoming');
 
@@ -85,11 +89,12 @@ export default function EventsTabs({
     return (
       <div
         key={event.id}
-        className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+        className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
         style={{
           borderLeftWidth: '4px',
           borderLeftColor: event.color || '#FF6B6B',
         }}
+        onClick={() => onEventClick && onEventClick(event)}
       >
         {/* Event Image */}
         {event.imageUrl && (
@@ -277,7 +282,8 @@ export default function EventsTabs({
                 return (
                   <div
                     key={temple.id}
-                    className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+                    className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => onTempleClick && onTempleClick(temple)}
                   >
                     {/* Temple Image */}
                     {temple.imageUrl && (
