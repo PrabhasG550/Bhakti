@@ -3,14 +3,27 @@
 import { useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay } from 'date-fns';
 import { HinduEvent } from '@/types/event';
-import { getEventsForDate } from '@/data/hinduEvents';
+import { useEvents } from '@/lib/hooks';
 
 interface CalendarProps {
   onDateClick: (date: Date, events: HinduEvent[]) => void;
 }
 
 export default function Calendar({ onDateClick }: CalendarProps) {
+  const { events, loading } = useEvents();
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Helper function to get events for a specific date
+  const getEventsForDate = (date: Date): HinduEvent[] => {
+    return events.filter(event => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getFullYear() === date.getFullYear() &&
+        eventDate.getMonth() === date.getMonth() &&
+        eventDate.getDate() === date.getDate()
+      );
+    });
+  };
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -32,9 +45,9 @@ export default function Calendar({ onDateClick }: CalendarProps) {
     setCurrentDate(addMonths(currentDate, 1));
   };
 
-  const handleDateClick = (date: Date) => {
-    const events = getEventsForDate(date);
-    onDateClick(date, events);
+  const handleDateClickInternal = (date: Date) => {
+    const eventsForDate = getEventsForDate(date);
+    onDateClick(date, eventsForDate);
   };
 
   // Get default color for event type (for legend)
@@ -47,7 +60,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
       case 'fast':
         return '#95E1D3'; // Light Green
       case 'ceremony':
-        return '#F38181'; // Pink
+        return '#F59E0B'; // Amber/Orange
       default:
         return '#FF6B6B';
     }
@@ -110,7 +123,8 @@ export default function Calendar({ onDateClick }: CalendarProps) {
           return (
             <button
               key={day.toISOString()}
-              onClick={() => handleDateClick(day)}
+              onClick={() => handleDateClickInternal(day)}
+              disabled={loading}
               className={`
                 p-0.5 rounded-lg border-2 transition-all
                 hover:scale-105 hover:shadow-md
@@ -118,6 +132,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
                   ? 'font-bold' 
                   : 'bg-white border-zinc-200 hover:border-zinc-300'
                 }
+                ${loading ? 'opacity-50 cursor-wait' : ''}
               `}
               style={isToday ? { 
                 aspectRatio: '1.15',
@@ -148,7 +163,7 @@ export default function Calendar({ onDateClick }: CalendarProps) {
                       >
                         <div
                           className="w-full h-3.5 rounded-lg relative overflow-hidden"
-                          style={{ backgroundColor: event.color || getTypeColor(event.type) }}
+                          style={{ backgroundColor: getTypeColor(event.type) }}
                         >
                           <span 
                             className="absolute inset-0 text-[8px] font-bold text-white text-center leading-tight flex items-center justify-center px-0.5"

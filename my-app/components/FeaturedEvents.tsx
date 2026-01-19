@@ -3,17 +3,19 @@
 import { HinduEvent } from '@/types/event';
 import { format } from 'date-fns';
 import { Temple } from '@/types/temple';
-import { hinduEvents } from '@/data/hinduEvents';
+import { useEvents } from '@/lib/hooks';
 
 interface FeaturedEventsProps {
   selectedTemple: Temple | null;
 }
 
 export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) {
+  const { events, loading } = useEvents();
+
   // Get featured events based on selected temple, or show all upcoming events if no temple selected
   const getFeaturedEvents = (): HinduEvent[] => {
     if (selectedTemple && selectedTemple.featuredEvents) {
-      return hinduEvents
+      return events
         .filter((event) => selectedTemple.featuredEvents?.includes(event.id))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
@@ -22,7 +24,7 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    return hinduEvents
+    return events
       .filter((event) => new Date(event.date) >= today)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 5);
@@ -45,6 +47,21 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
     }
   };
 
+  const getTypeColor = (type: HinduEvent['type']): string => {
+    switch (type) {
+      case 'festival':
+        return '#FF6B6B'; // Red/Coral
+      case 'holiday':
+        return '#4ECDC4'; // Teal
+      case 'fast':
+        return '#95E1D3'; // Light Green
+      case 'ceremony':
+        return '#F59E0B'; // Amber/Orange
+      default:
+        return '#FF6B6B';
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-3 h-full">
       <div className="mb-2">
@@ -62,7 +79,13 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
         )}
       </div>
 
-      {featuredEvents.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-zinc-500 dark:text-zinc-400">
+            Loading events...
+          </p>
+        </div>
+      ) : featuredEvents.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-zinc-500 dark:text-zinc-400">
             No featured events available. Select a temple to see events.
@@ -80,7 +103,7 @@ export default function FeaturedEvents({ selectedTemple }: FeaturedEventsProps) 
                 className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
                 style={{
                   borderLeftWidth: '4px',
-                  borderLeftColor: event.color || '#FF6B6B',
+                  borderLeftColor: getTypeColor(event.type),
                 }}
               >
                 {/* Event Image */}

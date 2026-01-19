@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { HinduEvent } from '@/types/event';
 import { format } from 'date-fns';
 import { Temple } from '@/types/temple';
-import { hinduEvents } from '@/data/hinduEvents';
+import { useEvents } from '@/lib/hooks';
 
 interface EventsTabsProps {
   selectedTemple: Temple | null;
@@ -23,12 +23,13 @@ export default function EventsTabs({
   onToggleSubscribe,
   allTemples
 }: EventsTabsProps) {
+  const { events, loading: eventsLoading } = useEvents();
   const [activeTab, setActiveTab] = useState<'saved' | 'upcoming' | 'subscribed'>('upcoming');
 
   // Get upcoming events
   const getUpcomingEvents = (): HinduEvent[] => {
     if (selectedTemple && selectedTemple.featuredEvents) {
-      return hinduEvents
+      return events
         .filter((event) => selectedTemple.featuredEvents?.includes(event.id))
         .filter((event) => new Date(event.date) >= new Date())
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -38,7 +39,7 @@ export default function EventsTabs({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    return hinduEvents
+    return events
       .filter((event) => new Date(event.date) >= today)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 10);
@@ -46,7 +47,7 @@ export default function EventsTabs({
 
   // Get saved events
   const getSavedEvents = (): HinduEvent[] => {
-    return hinduEvents
+    return events
       .filter((event) => savedEventIds.includes(event.id))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
@@ -78,6 +79,21 @@ export default function EventsTabs({
     }
   };
 
+  const getTypeColor = (type: HinduEvent['type']): string => {
+    switch (type) {
+      case 'festival':
+        return '#FF6B6B'; // Red/Coral
+      case 'holiday':
+        return '#4ECDC4'; // Teal
+      case 'fast':
+        return '#95E1D3'; // Light Green
+      case 'ceremony':
+        return '#F59E0B'; // Amber/Orange
+      default:
+        return '#FF6B6B';
+    }
+  };
+
   const renderEventCard = (event: HinduEvent) => {
     const eventDate = new Date(event.date);
     const isSaved = savedEventIds.includes(event.id);
@@ -88,7 +104,7 @@ export default function EventsTabs({
         className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
         style={{
           borderLeftWidth: '4px',
-          borderLeftColor: event.color || '#FF6B6B',
+          borderLeftColor: getTypeColor(event.type),
         }}
       >
         {/* Event Image */}
@@ -237,7 +253,11 @@ export default function EventsTabs({
 
       {/* Tab Content */}
       <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
-        {activeTab === 'saved' ? (
+        {eventsLoading ? (
+          <div className="text-center py-12">
+            <p className="text-zinc-500 text-sm">Loading events...</p>
+          </div>
+        ) : activeTab === 'saved' ? (
           savedEvents.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-zinc-500 text-sm">
