@@ -1,8 +1,47 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Temple } from '@/types/temple';
-import { searchTemplesByLocation, findClosestTemples, getUserLocation } from '@/data/temples';
+import { useTemples } from '@/lib/hooks';
+
+// Calculate distance between two coordinates using Haversine formula
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// Get user's location (simplified - in production, use geolocation API)
+async function getUserLocation(): Promise<{ latitude: number; longitude: number } | null> {
+  return new Promise((resolve) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        () => resolve(null)
+      );
+    } else {
+      resolve(null);
+    }
+  });
+}
 
 interface TempleSearchProps {
   onTempleSelect: (temple: Temple | null) => void;
@@ -10,11 +49,42 @@ interface TempleSearchProps {
 }
 
 export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleSearchProps) {
+  const { temples, loading: templesLoading } = useTemples();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Temple[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // Search temples by location name
+  const searchTemplesByLocation = (query: string): Temple[] => {
+    if (!query.trim()) return [];
+    
+    const searchTerm = query.toLowerCase();
+    return temples.filter(
+      (temple) =>
+        temple.name.toLowerCase().includes(searchTerm) ||
+        temple.city.toLowerCase().includes(searchTerm) ||
+        temple.state.toLowerCase().includes(searchTerm) ||
+        temple.location.toLowerCase().includes(searchTerm)
+    );
+  };
+
+  // Find closest temples based on coordinates
+  const findClosestTemples = (
+    userLat: number,
+    userLon: number,
+    limit: number = 5
+  ): Temple[] => {
+    return temples
+      .map((temple) => ({
+        ...temple,
+        distance: calculateDistance(userLat, userLon, temple.latitude, temple.longitude),
+      }))
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, limit)
+      .map(({ distance, ...temple }) => temple);
+  };
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -25,7 +95,7 @@ export default function TempleSearch({ onTempleSelect, selectedTemple }: TempleS
       setSearchResults([]);
       setShowResults(false);
     }
-  }, [searchQuery]);
+  }, [searchQuery, temples]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

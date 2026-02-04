@@ -10,9 +10,10 @@ import TempleDetailModal from '@/components/TempleDetailModal';
 import ProfileModal from '@/components/ProfileModal';
 import { HinduEvent } from '@/types/event';
 import { Temple } from '@/types/temple';
-import { temples } from '@/data/temples';
+import { useTemples } from '@/lib/hooks';
 
 export default function Home() {
+  const { temples, loading: templesLoading } = useTemples();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<HinduEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);

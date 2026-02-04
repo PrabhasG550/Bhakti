@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 import { HinduEvent } from '@/types/event';
+import { Temple } from '@/types/temple';
 
 interface EventDetailModalProps {
   events: HinduEvent[];
@@ -12,9 +13,10 @@ interface EventDetailModalProps {
   onToggleSave?: (eventId: string) => void;
   onBack?: () => void;
   showBackButton?: boolean;
+  temples?: Temple[];
 }
 
-export default function EventDetailModal({ events, selectedDate, isOpen, onClose, savedEventIds = [], onToggleSave, onBack, showBackButton = false }: EventDetailModalProps) {
+export default function EventDetailModal({ events, selectedDate, isOpen, onClose, savedEventIds = [], onToggleSave, onBack, showBackButton = false, temples = [] }: EventDetailModalProps) {
   if (!isOpen || !selectedDate || events.length === 0) return null;
 
   const getTypeBadgeColor = (type: HinduEvent['type']) => {
@@ -29,6 +31,21 @@ export default function EventDetailModal({ events, selectedDate, isOpen, onClose
         return 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300';
       default:
         return 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300';
+    }
+  };
+
+  const getTypeColor = (type: HinduEvent['type']): string => {
+    switch (type) {
+      case 'festival':
+        return '#FF6B6B'; // Red/Coral
+      case 'holiday':
+        return '#4ECDC4'; // Teal
+      case 'fast':
+        return '#95E1D3'; // Light Green
+      case 'ceremony':
+        return '#F59E0B'; // Amber/Orange
+      default:
+        return '#FF6B6B';
     }
   };
 
@@ -85,7 +102,7 @@ export default function EventDetailModal({ events, selectedDate, isOpen, onClose
                 className="bg-white border border-zinc-300 rounded-xl p-6 hover:shadow-lg transition-shadow"
                 style={{
                   borderLeftWidth: '4px',
-                  borderLeftColor: event.color || '#FF6B6B',
+                  borderLeftColor: getTypeColor(event.type),
                 }}
               >
                 {/* Event Image */}
@@ -154,48 +171,35 @@ export default function EventDetailModal({ events, selectedDate, isOpen, onClose
                 </div>
 
                 {/* Description */}
-                <p className="text-black mb-4 leading-relaxed">
-                  {event.description}
-                </p>
-
-                {/* Significance */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-black mb-2">
-                    Significance:
-                  </h4>
-                  <p className="text-black text-sm leading-relaxed">
-                    {event.significance}
+                  <p className="text-black leading-relaxed whitespace-pre-line">
+                    {event.description}
                   </p>
                 </div>
 
-                {/* Cultural Context */}
-                {event.culturalContext && (
-                  <div className="mb-4 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-400">
-                    <h4 className="text-sm font-semibold text-black mb-2 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                {/* Temples */}
+                {event.temples && event.temples.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-zinc-200">
+                    <h4 className="text-sm font-semibold text-black mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      Cultural Significance & Learning
+                      Celebrated at Temples:
                     </h4>
-                    <p className="text-black text-sm leading-relaxed">
-                      {event.culturalContext}
-                    </p>
-                  </div>
-                )}
-
-                {/* Traditions */}
-                {event.traditions && event.traditions.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-semibold text-black mb-2">
-                      Traditions & Practices:
-                    </h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {event.traditions.map((tradition, index) => (
-                        <li key={index} className="text-black text-sm">
-                          {tradition}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="flex flex-wrap gap-2">
+                      {event.temples
+                        .map((templeId) => temples.find((t) => t.id === templeId))
+                        .filter((temple): temple is Temple => temple !== undefined)
+                        .map((temple) => (
+                          <span
+                            key={temple.id}
+                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
+                          >
+                            {temple.name}
+                          </span>
+                        ))}
+                    </div>
                   </div>
                 )}
               </div>

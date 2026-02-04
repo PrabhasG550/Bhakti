@@ -3,7 +3,7 @@
 import { format } from 'date-fns';
 import { Temple } from '@/types/temple';
 import { HinduEvent } from '@/types/event';
-import { hinduEvents } from '@/data/hinduEvents';
+import { useEvents } from '@/lib/hooks';
 
 interface TempleDetailModalProps {
   temple: Temple | null;
@@ -17,13 +17,14 @@ interface TempleDetailModalProps {
 }
 
 export default function TempleDetailModal({ temple, isOpen, onClose, isSubscribed = false, onToggleSubscribe, savedEventIds = [], onToggleSave, onEventClick }: TempleDetailModalProps) {
+  const { events, loading: eventsLoading } = useEvents();
 
   if (!isOpen || !temple) return null;
 
   // Get events for this temple
   const getTempleEvents = (): HinduEvent[] => {
     if (temple.featuredEvents) {
-      return hinduEvents.filter((event) => temple.featuredEvents?.includes(event.id));
+      return events.filter((event) => temple.featuredEvents?.includes(event.id));
     }
     return [];
   };
@@ -87,6 +88,21 @@ export default function TempleDetailModal({ temple, isOpen, onClose, isSubscribe
         return 'bg-pink-100 text-pink-800';
       default:
         return 'bg-zinc-100 text-zinc-800';
+    }
+  };
+
+  const getTypeColor = (type: HinduEvent['type']): string => {
+    switch (type) {
+      case 'festival':
+        return '#FF6B6B'; // Red/Coral
+      case 'holiday':
+        return '#4ECDC4'; // Teal
+      case 'fast':
+        return '#95E1D3'; // Light Green
+      case 'ceremony':
+        return '#F59E0B'; // Amber/Orange
+      default:
+        return '#FF6B6B';
     }
   };
 
@@ -200,7 +216,11 @@ export default function TempleDetailModal({ temple, isOpen, onClose, isSubscribe
             <div className="bg-white rounded-lg p-4">
               <h3 className="text-lg font-bold text-black mb-4">Upcoming Events</h3>
               
-              {templeEvents.length === 0 ? (
+              {eventsLoading ? (
+                <div className="text-center py-8">
+                  <p className="text-black">Loading events...</p>
+                </div>
+              ) : templeEvents.length === 0 ? (
                 <div className="text-center py-8">
                   <p className="text-black">No events available for this temple.</p>
                 </div>
@@ -220,7 +240,7 @@ export default function TempleDetailModal({ temple, isOpen, onClose, isSubscribe
                           className="border border-zinc-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
                           style={{
                             borderLeftWidth: '4px',
-                            borderLeftColor: event.color || '#FF6B6B',
+                            borderLeftColor: getTypeColor(event.type),
                           }}
                           onClick={() => onEventClick && onEventClick(event)}
                         >
